@@ -9,57 +9,81 @@ use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use PhpParser\Node\Stmt\TryCatch;
 
 class AuthController extends Controller
 {
 
     public function signUp(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string'
-        ]);
+        try {
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
-        ]);
+            $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|string|email|unique:users',
+                'password' => 'required|string'
+            ]);
 
-        return response()->json([
-            'message' => 'Successfully created user!'
-        ], 201);
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password)
+            ]);
+
+            $header = ['Content-Type: application/json'];
+
+            return response()->json([
+                'status' => 'ok',
+                'message' => 'Successfully created User.'
+            ], 200,$header);
+
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ], 500,$header);
+        }
     }
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-            'remember_me' => 'boolean'
-        ]);
+        try {
 
-        $credentials = request(['email', 'password']);
+            $request->validate([
+                'email' => 'required|string|email',
+                'password' => 'required|string',
+                'remember_me' => 'boolean'
+            ]);
 
-        if (!Auth::attempt($credentials))
+            $credentials = request(['email', 'password']);
+
+            $header = ['Content-Type: application/json'];
+
+            if (!Auth::attempt($credentials))
+                return response()->json([
+                    'message' => 'Unauthorized'
+                ], 401,$header);
+
+            $user = $request->user();
+            $tokenResult = $user->createToken('Personal Access Token');
+
+            $token = $tokenResult->token;
+            if ($request->remember_me)
+                $token->expires_at = Carbon::now()->addWeeks(1);
+            $token->save();
+
             return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+                'access_token' => $tokenResult->accessToken,
+                'token_type' => 'Bearer',
+                'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString()
+            ],200,$header);
 
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-
-        $token = $tokenResult->token;
-        if ($request->remember_me)
-            $token->expires_at = Carbon::now()->addWeeks(1);
-        $token->save();
-
-        return response()->json([
-            'access_token' => $tokenResult->accessToken,
-            'token_type' => 'Bearer',
-            'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString()
-        ]);
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ], 500,$header);
+        }
     }
 
     public function logout(Request $request)
@@ -68,22 +92,37 @@ class AuthController extends Controller
 
             $request->user()->token()->revoke();
 
+            $header = ['Content-Type: application/json'];
+
             return response()->json([
-                'message' => 'Successfully logged out'
-            ]);
+                'status' => 'ok',
+                'message' => 'Successfully logged out.'
+            ],200,$header);
 
         } catch (\Exception $ex) {
             return response()->json([
                 'status' => 'error',
                 'message' => $ex->getMessage()
-            ]);
+            ],500,$header);
         }
 
     }
 
     public function user(Request $request)
     {
-        return response()->json($request->user());
+        try {
+
+            $header = ['Content-Type: application/json'];
+
+            return response()->json($request->user(),200,$header);
+
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ],200,$header);
+        }
+
     }
 
 }

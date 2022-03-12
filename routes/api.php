@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +15,13 @@ use App\Http\Controllers\Api\AuthController;
 |
 */
 
-Route::post('login', [AuthController::class,'login']);
-Route::post('signup',[AuthController::class,'signup']);
+Route::post('/login', [AuthController::class,'login']);
+Route::post('/signup',[AuthController::class,'signup']);
 
 Route::group(['middleware' => 'auth:api'], function() {
 
-    Route::get('logout', [AuthController::class,'logout']);
-    Route::get('user', [AuthController::class,'user']);
+    Route::get('/logout', [AuthController::class,'logout']);
+    Route::get('/user', [AuthController::class,'user']);
 
+    Route::get('/posts', [PostController::class,'getAll']);
 });
