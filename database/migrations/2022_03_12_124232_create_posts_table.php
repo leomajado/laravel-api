@@ -16,7 +16,7 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title',30);
+            $table->string('title',25);
             $table->string('description',255);
             $table->foreignIdFor(User::class);
             $table->dateTime('deleted_at')->nullable();
