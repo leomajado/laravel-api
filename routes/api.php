@@ -24,4 +24,10 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/user', [AuthController::class,'user']);
 
     Route::get('/posts', [PostController::class,'getAll']);
+    Route::get('/post/{id}', [PostController::class,'getPostById']);
+    Route::get('/user/{id}/posts', [PostController::class,'getAllByUser']);
+    Route::post('/post',[PostController::class,'store']);
+    Route::put('/post/{id}',[PostController::class,'update']);
+    Route::delete('/post/{id}',[PostController::class,'destroy']);
+
 });

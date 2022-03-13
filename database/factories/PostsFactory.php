@@ -14,7 +14,7 @@ class PostsFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->title(),
+            'title' => $this->faker->word(),
             'description' => $this->faker->paragraph(2),
             'user_id' => $this->faker->numberBetween(1,10)
         ];
