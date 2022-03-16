@@ -11,40 +11,33 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use PhpParser\Node\Stmt\TryCatch;
 
-class AuthController extends Controller
-{
+class AuthController extends Controller {
 
-    public function signUp(Request $request)
-    {
-        try {
-
-            $request->validate([
-                'name' => 'required|string',
-                'email' => 'required|string|email|unique:users',
-                'password' => 'required|string'
-            ]);
-
-            User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password)
-            ]);
-
-            $header = ['Content-Type: application/json'];
-
-            return response()->json([
-                'status' => 'ok',
-                'message' => 'Successfully created User.'
-            ], 200,$header);
-
-        } catch (\Exception $ex) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $ex->getMessage()
-            ], 500,$header);
-        }
-    }
-
+    /**
+     * @OA\Post(
+     * path="/api/login",
+     * summary="Sign in",
+     * description="Login by email, password",
+     * operationId="authLogin",
+     * tags={"auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"email","password"},
+     *       @OA\Property(property="email", type="string", format="email", example="madeline13@example.net"),
+     *       @OA\Property(property="password", type="string", format="password", example="password"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=422,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *        )
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         try {
@@ -86,6 +79,22 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/logout",
+     * summary="Sign out",
+     * description="Logout by token",
+     * operationId="authLogout",
+     * tags={"auth"},
+     * @OA\Response(
+     *    response=422,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *        )
+     *     )
+     * )
+     */
     public function logout(Request $request)
     {
         try {
@@ -125,4 +134,34 @@ class AuthController extends Controller
 
     }
 
+    public function signUp(Request $request)
+    {
+        try {
+
+            $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|string|email|unique:users',
+                'password' => 'required|string'
+            ]);
+
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password)
+            ]);
+
+            $header = ['Content-Type: application/json'];
+
+            return response()->json([
+                'status' => 'ok',
+                'message' => 'Successfully created User.'
+            ], 200,$header);
+
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ], 500,$header);
+        }
+    }
 }

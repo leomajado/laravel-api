@@ -13,6 +13,21 @@ class PostController extends Controller
 {
     use SoftDeletes;
 
+    /**
+    * @OA\Get(
+    *     path="/api/posts",
+    *     summary="Show all Posts",
+    *     security={{"bearerAuth": {}}},
+    *     @OA\Response(
+    *         response=200,
+    *         description="Get all Posts from user."
+    *     ),
+    *     @OA\Response(
+    *         response="default",
+    *         description="An error occurred."
+    *     )
+    * )
+    */
     public function getAll(){
         return Posts::with('user')->get('*');
     }

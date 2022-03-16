@@ -58,7 +58,13 @@
                 'provider' => 'users',
             ],
 
-    6) Enjoy!
+    6) Add darkaonline/l5-swagger running the following commands:
+
+       composer require "darkaonline/l5-swagger"
+
+       php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+
+    7) Enjoy!
 
 ## License
 
