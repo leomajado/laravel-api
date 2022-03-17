@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Posts;
 
-class PostController extends Controller
-{
+class PostController extends Controller {
+
     use SoftDeletes;
 
     /**
     * @OA\Get(
+    *     tags={"posts"},
     *     path="/api/posts",
     *     summary="Show all Posts",
     *     security={{"bearerAuth": {}}},
@@ -23,8 +24,12 @@ class PostController extends Controller
     *         description="Get all Posts from user."
     *     ),
     *     @OA\Response(
-    *         response="default",
-    *         description="An error occurred."
+    *         response=401,
+    *         description="Unauthorized"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Not Found"
     *     )
     * )
     */
@@ -32,6 +37,37 @@ class PostController extends Controller
         return Posts::with('user')->get('*');
     }
 
+    /**
+     * @OA\Get(
+     *   tags={"posts"},
+     *   path="/api/post/{id}",
+     *   summary="Show Post By Id",
+     *   security={
+     *      {"bearerAuth": {}},
+     *   },
+     *   @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Get By Id",
+     *     required=true,
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="Unauthorized"
+     *   ),
+     *   @OA\Response(
+     *     response=404,
+     *     description="Not Found"
+     *   )
+     * )
+     */
     public function getPostById(Request $request){
         return Posts::with('user')->where('id',$request->id)->first();
     }
