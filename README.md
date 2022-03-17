@@ -20,20 +20,16 @@
 
     1) composer install
     
-    2) composer require laravel/ui
+    2) php artisan migrate:fresh --seed
 
-    3) php artisan ui vue --auth
+    3) php artisan passport:install
 
-    4) php artisan migrate:fresh --seed
-
-    5) php artisan passport:install
-
-        5.1 Add the passport key to your **.env** file.
+        3.1 Add the passport key to your **.env** file.
             
             PASSPORT_CLIENT_ID=2
             PASSPORT_CLIENT_SECRET=viF8y13ajlDeigxcZi7kUqQjazseDT7lvI3xasSg
         
-        5.2 Add HasApiTokens to your user Model.
+        3.2 Add HasApiTokens to your user Model.
 
             use Laravel\Passport\HasApiTokens;
             use Illuminate\Notifications\Notifiable;
@@ -45,26 +41,26 @@
                 use HasApiTokens, Notifiable;
             }
         
-        5.3 Modify the file App\Providers\AuthServiceProvider. <br>
+        3.3 Modify the file App\Providers\AuthServiceProvider. <br>
 
             Add the Laravel Passport facade -> use Laravel\Passport\Passport;
             Uncomment the line -> 'App\Model' => 'App\Policies\ModelPolicy' <br>
             Add the method routes() in function Boot() ->  Passport::routes(); below $this->registerPolicies();
         
-        5.4 Add in the file config/auth.php the api section with the following options:
+        3.4 Add in the file config/auth.php the api section with the following options:
 
             'api' => [
                 'driver' => 'passport',
                 'provider' => 'users',
             ],
 
-    6) Add darkaonline/l5-swagger running the following commands:
+    4) Add darkaonline/l5-swagger running the following commands:
 
        composer require "darkaonline/l5-swagger"
 
        php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
 
-    7) Enjoy!
+    5) Enjoy!
 
 ## License
 

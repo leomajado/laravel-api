@@ -9,7 +9,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 
 use App\Models\User;
-use PhpParser\Node\Stmt\TryCatch;
 
 class AuthController extends Controller {
 
@@ -25,17 +24,31 @@ class AuthController extends Controller {
      *    description="Pass user credentials",
      *    @OA\JsonContent(
      *       required={"email","password"},
-     *       @OA\Property(property="email", type="string", format="email", example="madeline13@example.net"),
-     *       @OA\Property(property="password", type="string", format="password", example="password"),
+     *       @OA\Property(
+     *         property="email",
+     *         type="string",
+     *         format="email",
+     *         example="madeline13@example.net"
+     *       ),
+     *       @OA\Property(
+     *         property="password",
+     *         type="string",
+     *         format="password",
+     *         example="password"
+     *       ),
      *    ),
      * ),
      * @OA\Response(
      *    response=422,
      *    description="Wrong credentials response",
      *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
-     *        )
-     *     )
+     *       @OA\Property(
+     *         property="message",
+     *         type="string",
+     *         example="Sorry, wrong email address or password. Please try again"
+     *       )
+     *    )
+     *   )
      * )
      */
     public function login(Request $request)
@@ -86,13 +99,29 @@ class AuthController extends Controller {
      * description="Logout by token",
      * operationId="authLogout",
      * tags={"auth"},
+     * security={{"bearerAuth": {}}},
+     * @OA\Response(
+     *   response="200",
+     *   description="OK, Token Revoked",
+     *   @OA\JsonContent(
+     *       @OA\Property(
+     *         property="message",
+     *         type="string",
+     *         example="Token Revoked Successfully"
+     *       )
+     *    )
+     * ),
      * @OA\Response(
      *    response=422,
-     *    description="Wrong credentials response",
+     *    description="Wrong user data",
      *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
-     *        )
+     *       @OA\Property(
+     *         property="message",
+     *         type="string",
+     *         example="Sorry, Unauthenticated User."
+     *       )
      *     )
+     *   )
      * )
      */
     public function logout(Request $request)
@@ -117,6 +146,23 @@ class AuthController extends Controller {
 
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/user",
+     * summary="User Data",
+     * description="Show User Details.",
+     * operationId="authUser",
+     * tags={"auth"},
+     * security={{"bearerAuth": {}}},
+     * @OA\Response(
+     *    response=422,
+     *    description="User",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Sorry, No user data. Please try again")
+     *        )
+     *     )
+     * )
+     */
     public function user(Request $request)
     {
         try {
@@ -134,6 +180,58 @@ class AuthController extends Controller {
 
     }
 
+    /**
+     * @OA\Post(
+     * path="/api/signup",
+     * summary="Sign in",
+     * description="Sign Up User",
+     * operationId="authSignUp",
+     * tags={"auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       required={"name","email","password"},
+     *       @OA\Property(
+     *         property="name",
+     *         type="string",
+     *         format="text",
+     *         example="New User Name"
+     *       ),
+     *       @OA\Property(
+     *         property="email",
+     *         type="string",
+     *         format="email",
+     *         example="new@example.net"
+     *       ),
+     *       @OA\Property(
+     *         property="password",
+     *         type="string",
+     *         format="password",
+     *         example="password"
+     *       ),
+     *    ),
+     * ),
+     * @OA\Response(
+     *     response=200,
+     *     description="user created successfully",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *     )
+     *   ),
+     * @OA\Response(
+     *    response=422,
+     *    description="User Creation Error",
+     *    @OA\JsonContent(
+     *       @OA\Property(
+     *         property="message",
+     *         type="string",
+     *         example="Sorry, user can't be created"
+     *       )
+     *    )
+     *   )
+     * )
+     */
     public function signUp(Request $request)
     {
         try {
