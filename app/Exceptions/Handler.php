@@ -41,13 +41,13 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        if($request->is('api/*')){
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ],500);
-        }
-
-        return parent::render($request, $e);
+        return response()->json(
+            [
+                'errors' => [
+                    'status' => 401,
+                    'message' => 'Unauthenticated',
+                ]
+            ], 401
+        );
     }
 }
