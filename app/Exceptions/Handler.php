@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -44,10 +45,10 @@ class Handler extends ExceptionHandler
         return response()->json(
             [
                 'errors' => [
-                    'status' => 401,
-                    'message' => 'Unauthenticated',
+                    'status' => $e->getStatusCode(),
+                    'message' => $e->getMessage(),
                 ]
-            ], 401
+            ], $e->getStatusCode()
         );
     }
 }
