@@ -35,7 +35,26 @@ class PostController extends Controller {
      * )
      */
     public function getAll(){
-        return Posts::with('user')->get('*');
+        try {
+            $header = ['Content-Type: application/json'];
+            $p = Posts::with('user')->get('*');
+            if(!empty($p)){
+                return response()->json([
+                    'status' => 'ok',
+                    'data' => $p
+                ],200,$header);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Posts not found.'
+                ],404,$header);
+            }
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ],500,$header);
+        }
     }
 
     /**
@@ -70,7 +89,26 @@ class PostController extends Controller {
      * )
      */
     public function getPostById(Request $request){
-        return Posts::with('user')->where('id',$request->id)->first();
+        try {
+            $header = ['Content-Type: application/json'];
+            $p = Posts::with('user')->where('id',$request->id)->first();
+            if(!empty($p)){
+                return response()->json([
+                    'status' => 'ok',
+                    'data' => $p
+                ],200,$header);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Post not found.'
+                ],404,$header);
+            }
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ],500,$header);
+        }
     }
 
     /**
@@ -105,7 +143,26 @@ class PostController extends Controller {
      * )
      */
     public function getAllByUser(Request $request){
-        return Posts::with('user')->where('user_id',$request->id)->get();
+        try {
+            $header = ['Content-Type: application/json'];
+            $p = Posts::with('user')->where('user_id',$request->id)->get();
+            if(!empty($p)){
+                return response()->json([
+                    'status' => 'ok',
+                    'data' => $p
+                ],200,$header);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Posts not found.'
+                ],404,$header);
+            }
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ],500,$header);
+        }
     }
 
     /**
