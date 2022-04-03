@@ -16,8 +16,8 @@ use App\Http\Controllers\Api\PostController;
 |
 */
 
-Route::post('/login', [AuthController::class,'login']);
-Route::post('/signup',[AuthController::class,'signup']);
+Route::post('/login', [AuthController::class,'login'])->name('login');
+Route::post('/signup',[AuthController::class,'signup'])->name('signup');
 
 Route::group(['middleware' => 'auth:api'], function() {
 
