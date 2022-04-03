@@ -2,7 +2,6 @@
 
 namespace App\Exceptions;
 
-use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -35,20 +34,25 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
+        $this->reportable(function (NotFoundHttpException $e, $request) {
             //
         });
     }
 
     public function render($request, Throwable $e)
     {
-        return response()->json(
-            [
-                'errors' => [
-                    'status' => $e->getStatusCode(),
-                    'message' => $e->getMessage(),
-                ]
-            ], $e->getStatusCode()
-        );
+
+        $header = ['Content-Type: application/json'];
+        $code = 500;
+
+        if($e->getMessage()=='Unauthenticated.')
+            $code = 401;
+
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ],$code,$header);
+
     }
+
 }

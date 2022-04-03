@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
 
 use App\Models\User;
@@ -85,6 +87,7 @@ class AuthController extends Controller {
             ],200,$header);
 
         } catch (\Exception $ex) {
+            $header = ['Content-Type: application/json'];
             return response()->json([
                 'status' => 'error',
                 'message' => $ex->getMessage()
@@ -138,6 +141,7 @@ class AuthController extends Controller {
             ],200,$header);
 
         } catch (\Exception $ex) {
+            $header = ['Content-Type: application/json'];
             return response()->json([
                 'status' => 'error',
                 'message' => $ex->getMessage()
@@ -242,11 +246,13 @@ class AuthController extends Controller {
                 'password' => 'required|string'
             ]);
 
-            User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password)
-            ]);
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->email_verified_at = now();
+            $user->remember_token = Str::random(10);
+            $user->save();
 
             $header = ['Content-Type: application/json'];
 
@@ -256,6 +262,7 @@ class AuthController extends Controller {
             ], 200,$header);
 
         } catch (\Exception $ex) {
+            $header = ['Content-Type: application/json'];
             return response()->json([
                 'status' => 'error',
                 'message' => $ex->getMessage()
