@@ -37,7 +37,7 @@ class PostController extends Controller {
     public function getAll(){
         try {
             $header = ['Content-Type: application/json'];
-            $p = Posts::with('user')->get('*');
+            $p = Posts::with('user')->orderBy('id','Desc')->get('*');
             if(!empty($p)){
                 return response()->json([
                     'status' => 'ok',
