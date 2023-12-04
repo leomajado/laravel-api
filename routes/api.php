@@ -19,7 +19,7 @@ use App\Http\Controllers\Api\PostController;
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 
-Route::group(['middleware' => 'auth:api'], function () {
+Route::group(['middleware' => ['jwt.auth']], function () {
 
   Route::post('/logout', [AuthController::class, 'logout']);
   Route::get('/user', [AuthController::class, 'user']);
