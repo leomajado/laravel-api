@@ -1,10 +1,10 @@
 <p align="center">
     <a href="https://laravel.com" target="_blank">
-        <img 
-            src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" 
+        <img
+            src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg"
             width="250"
         >
-    </a><br>    
+    </a><br>
 </p>
 
 <p align="center">
@@ -16,51 +16,13 @@
 
 # Installation and configuration
 
-## Open a Terminal and run the following commands:  
+## Open a Terminal and run the following commands:
 
     1) composer install
-    
+
     2) php artisan migrate:fresh --seed
 
-    3) php artisan passport:install
-
-        3.1 Add the passport key to your **.env** file.
-            
-            PASSPORT_CLIENT_ID=2
-            PASSPORT_CLIENT_SECRET=viF8y13ajlDeigxcZi7kUqQjazseDT7lvI3xasSg
-        
-        3.2 Add HasApiTokens to your user Model.
-
-            use Laravel\Passport\HasApiTokens;
-            use Illuminate\Notifications\Notifiable;
-            use Illuminate\Foundation\Auth\User as Authenticatable;
-            use Laravel\Passport\HasApiTokens;
-            
-            class User extends Authenticatable
-            {
-                use HasApiTokens, Notifiable;
-            }
-        
-        3.3 Modify the file App\Providers\AuthServiceProvider. <br>
-
-            Add the Laravel Passport facade -> use Laravel\Passport\Passport;
-            Uncomment the line -> 'App\Model' => 'App\Policies\ModelPolicy' <br>
-            Add the method routes() in function Boot() ->  Passport::routes(); below $this->registerPolicies();
-        
-        3.4 Add in the file config/auth.php the api section with the following options:
-
-            'api' => [
-                'driver' => 'passport',
-                'provider' => 'users',
-            ],
-
-    4) Add darkaonline/l5-swagger running the following commands:
-
-       composer require "darkaonline/l5-swagger"
-
-       php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
-
-    5) Enjoy!
+    3) Enjoy!
 
 ## License
 
