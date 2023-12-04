@@ -16,19 +16,18 @@ use App\Http\Controllers\Api\PostController;
 |
 */
 
-Route::post('/login', [AuthController::class,'login'])->name('login');
-Route::post('/signup',[AuthController::class,'signup'])->name('signup');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 
-Route::group(['middleware' => 'auth:api'], function() {
+Route::group(['middleware' => 'auth:api'], function () {
 
-    Route::get('/logout', [AuthController::class,'logout']);
-    Route::get('/user', [AuthController::class,'user']);
+  Route::post('/logout', [AuthController::class, 'logout']);
+  Route::get('/user', [AuthController::class, 'user']);
 
-    Route::get('/posts', [PostController::class,'getAll']);
-    Route::get('/post/{id}', [PostController::class,'getPostById']);
-    Route::get('/user/{id}/posts', [PostController::class,'getAllByUser']);
-    Route::post('/post',[PostController::class,'store']);
-    Route::put('/post/{id}',[PostController::class,'update']);
-    Route::delete('/post/{id}',[PostController::class,'destroy']);
-
+  Route::get('/posts', [PostController::class, 'getAll']);
+  Route::get('/post/{id}', [PostController::class, 'getPostById']);
+  Route::get('/user/{id}/posts', [PostController::class, 'getAllByUser']);
+  Route::post('/post', [PostController::class, 'store']);
+  Route::put('/post/{id}', [PostController::class, 'update']);
+  Route::delete('/post/{id}', [PostController::class, 'destroy']);
 });
